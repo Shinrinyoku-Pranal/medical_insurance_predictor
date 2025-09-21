@@ -48,7 +48,6 @@ footer {
 }
 
 
-/* ===== Progress ===== */
 .progress {
   font-size: 18px;
   font-weight: 600;
@@ -57,7 +56,6 @@ footer {
   text-align: center;
 }
 
-/* ===== Question Blocks ===== */
 .question-block {
   display: none;
   margin-bottom: 25px;
@@ -78,7 +76,6 @@ label, .helper-text {
   color: #2c3e50;
 }
 
-/* ===== Inputs & Selects ===== */
 input, select {
   width: 60%;
   max-width: 280px;
@@ -120,24 +117,22 @@ button:hover:not(:disabled) {
   background: linear-gradient(135deg, #16a085, #149174);
 }
 
-/* ===== BMI Modal ===== */
-/* ===== BMI Modal ===== */
 .modal {
-  display: block;             /* use block + visibility/opacity for transitions */
+  display: block;           
   position: fixed;
   z-index: 1000;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background-color: rgba(0,0,0,0.0); /* invisible initially */
-  justify-content: center;    /* center content horizontally */
-  align-items: center;        /* center content vertically */
+  background-color: rgba(0,0,0,0.0); 
+  justify-content: center;   
+  align-items: center;   
   visibility: hidden;
   opacity: 0;
   transition: opacity 220ms ease, background-color 220ms ease, visibility 220ms;
-  display: flex;              /* keep flex for centering content */
+  display: flex;             
 }
 
-/* utility class to show modal using opacity & visibility */
+
 .modal.open {
   visibility: visible;
   opacity: 1;
@@ -194,11 +189,10 @@ button:hover:not(:disabled) {
   color: #000;
 }
 
-/* ===== Height Inputs ===== */
 .height-inputs {
   display: flex;
   justify-content: center;
-  gap: 4px;   /* smaller gap between feet and inches */
+  gap: 4px;  
   margin-bottom: 10px;
 }
 
@@ -208,7 +202,6 @@ button:hover:not(:disabled) {
   text-align: center;
 }
 
-/* ===== Result Block ===== */
 .result-block {
   display: none;
   flex-direction: column;
@@ -224,7 +217,6 @@ button:hover:not(:disabled) {
   display: flex;
 }
 
-/* ===== Result Block Tweaks ===== */
 .result-block h2 {
   font-size: 20px;
   margin-bottom: 25px;
@@ -244,8 +236,7 @@ button:hover:not(:disabled) {
   margin-bottom: 25px;
   font-size: 16px;       /* smaller font size */
   line-height: 1.6;      /* more spacing between lines */
-  color: #000;           /* black text */
-}
+  color: #000;        
 
 
 .result-block p {
