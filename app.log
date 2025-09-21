@@ -1,0 +1,7 @@
+Loaded model from model.pkl: <class 'sklearn.ensemble._forest.RandomForestRegressor'>
+Loaded features from features.pkl: ['age', 'bmi', 'children', 'sex_male', 'smoker_yes', 'region_northwest', 'region_southeast', 'region_southwest']
+Trying to start Flask on port 5001...
+ * Serving Flask app 'app'
+ * Debug mode: on
+Address already in use
+Port 5001 is in use by another program. Either identify and stop that program, or start the server with a different port.

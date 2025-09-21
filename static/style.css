@@ -1,0 +1,270 @@
+/* ===== Fonts & Base ===== */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #f0f2f5, #dfe6e9);
+  color: #2c3e50;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== Headings ===== */
+h1 {
+  font-size: 46px;
+  font-weight: 700;
+  margin: 30px 0 10px;
+  text-align: center;
+  color: #1a5276;
+}
+
+p {
+    font-size: 20px;
+    margin: 10px 0 30px;
+    text-align: center;
+    color: #555;
+}
+
+/* ===== Intro Text Centered in Middle ===== */
+.intro-text {
+  font-size: 20px;
+  margin: 25px auto;
+  color: #555;
+  text-align: center;
+  max-width: 650px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ===== Footer Centered ===== */
+footer {
+  text-align: center;
+  font-size: 14px;
+  color: #888;
+  margin-top: auto;
+  padding: 15px 0;
+}
+
+
+/* ===== Progress ===== */
+.progress {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #16a085;
+  text-align: center;
+}
+
+/* ===== Question Blocks ===== */
+.question-block {
+  display: none;
+  margin-bottom: 25px;
+  text-align: center;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.question-block.active {
+  display: block;
+}
+
+label, .helper-text {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 22px;
+  font-weight: 600;
+  text-align: center;
+  color: #2c3e50;
+}
+
+/* ===== Inputs & Selects ===== */
+input, select {
+  width: 60%;
+  max-width: 280px;
+  padding: 14px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin: 0 auto 15px auto;
+  display: block;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+input:focus, select:focus {
+  border-color: #1abc9c;
+  box-shadow: 0 0 8px rgba(26, 188, 156, 0.4);
+  outline: none;
+}
+
+/* ===== Buttons ===== */
+button {
+  padding: 14px 30px;
+  font-size: 18px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #1abc9c, #16a085);
+  color: #fff;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: all 0.3s ease;
+}
+
+button:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #16a085, #149174);
+}
+
+/* ===== BMI Modal ===== */
+/* ===== BMI Modal ===== */
+.modal {
+  display: block;             /* use block + visibility/opacity for transitions */
+  position: fixed;
+  z-index: 1000;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.0); /* invisible initially */
+  justify-content: center;    /* center content horizontally */
+  align-items: center;        /* center content vertically */
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 220ms ease, background-color 220ms ease, visibility 220ms;
+  display: flex;              /* keep flex for centering content */
+}
+
+/* utility class to show modal using opacity & visibility */
+.modal.open {
+  visibility: visible;
+  opacity: 1;
+  background-color: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 420px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  transform: translateY(6px) scale(0.98);
+  opacity: 0;
+  transition: transform 220ms ease, opacity 220ms ease;
+  position: relative;
+}
+
+.modal.open .modal-content {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.close {
+  position: absolute;
+  top: 15px; right: 20px;
+  font-size: 30px;
+  font-weight: bold;
+  color: #666;
+  cursor: pointer;
+}
+
+
+
+
+.modal-content h3 {
+  font-size: 26px;
+  margin-bottom: 20px;
+  color: #1a5276;
+}
+
+.close {
+  position: absolute;
+  top: 20px; right: 25px;
+  font-size: 30px;
+  font-weight: bold;
+  color: #666;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: #000;
+}
+
+/* ===== Height Inputs ===== */
+.height-inputs {
+  display: flex;
+  justify-content: center;
+  gap: 4px;   /* smaller gap between feet and inches */
+  margin-bottom: 10px;
+}
+
+
+.height-inputs input {
+  width: 80px;
+  text-align: center;
+}
+
+/* ===== Result Block ===== */
+.result-block {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  font-size: 28px;
+  color: #e67e22;
+  text-align: center;
+}
+
+.result-block.active {
+  display: flex;
+}
+
+/* ===== Result Block Tweaks ===== */
+.result-block h2 {
+  font-size: 34px;
+  margin-bottom: 25px;
+  color: #e67e22;
+}
+
+.tips-header {
+  font-size: 22px;
+  margin: 20px 0 15px;
+  color: #2c3e50;
+}
+
+.tips-list {
+  text-align: left;
+  display: inline-block;
+  margin-top: 10px;
+  margin-bottom: 25px;
+  font-size: 16px;       /* smaller font size */
+  line-height: 1.6;      /* more spacing between lines */
+  color: #000;           /* black text */
+}
+
+
+.result-block p {
+  font-size: 20px;
+  margin: 8px 0;
+}
+
+.result-block small {
+  margin-top: 20px;
+  color: #888;
+}
+
+/* ===== Animations ===== */
+@keyframes popin {
+  0% { transform: scale(0.7); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

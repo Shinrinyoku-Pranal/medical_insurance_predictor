@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Insurance Cost Predictor | The D.A.G.P. Initiative</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <!-- CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <!-- ===== Header / Hero ===== -->
+  <header class="hero">
+    <div class="hero-content">
+      <h1>Insurance Charges Predictor</h1>
+      <p class="intro-text">Answer a few quick questions to estimate your medical insurance costs.</p>
+    </div>
+  </header>
+
+  <!-- ===== Quiz Container ===== -->
+  <main class="quiz-container" id="quiz-container">
+    <div class="progress">
+      Question <span id="current-question">1</span>/6
+    </div>
+
+    <form id="quizForm" action="{{ url_for('predict') }}" method="post">
+      <!-- Age -->
+      <div class="question-block active" data-question="1">
+        <label>What is your age?</label>
+        <input type="number" name="age" placeholder="Age" min="1" max="120" required />
+        <div class="nav-buttons">
+          <button type="button" class="next-btn">Next</button>
+        </div>
+      </div>
+
+      <!-- BMI -->
+      <div class="question-block" data-question="2">
+        <label>What is your BMI?</label>
+        <input type="number" name="bmi" placeholder="BMI" step="0.1" min="10" max="60" required />
+        <p class="helper-text">
+          Don’t know your BMI? <a href="#" id="open-bmi-calculator">Calculate here</a>
+        </p>
+        <div class="nav-buttons">
+          <button type="button" class="back-btn">Back</button>
+          <button type="button" class="next-btn">Next</button>
+        </div>
+      </div>
+
+      <!-- Children -->
+      <div class="question-block" data-question="3">
+        <label>How many children do you have?</label>
+        <input type="number" name="children" placeholder="Number of children" min="0" max="20" required />
+        <div class="nav-buttons">
+          <button type="button" class="back-btn">Back</button>
+          <button type="button" class="next-btn">Next</button>
+        </div>
+      </div>
+
+      <!-- Sex -->
+      <div class="question-block" data-question="4">
+        <label>What is your sex?</label>
+        <select name="sex" required>
+          <option value="">Select</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+        <div class="nav-buttons">
+          <button type="button" class="back-btn">Back</button>
+          <button type="button" class="next-btn">Next</button>
+        </div>
+      </div>
+
+      <!-- Smoker -->
+      <div class="question-block" data-question="5">
+        <label>Do you smoke?</label>
+        <select name="smoker" required>
+          <option value="">Select</option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select>
+        <div class="nav-buttons">
+          <button type="button" class="back-btn">Back</button>
+          <button type="button" class="next-btn">Next</button>
+        </div>
+      </div>
+
+      <!-- Region -->
+      <div class="question-block" data-question="6">
+        <label>Which region do you live in?</label>
+        <select name="region" required>
+          <option value="">Select</option>
+          <option value="northwest">Northwest</option>
+          <option value="northeast">Northeast</option>
+          <option value="southwest">Southwest</option>
+          <option value="southeast">Southeast</option>
+        </select>
+        <div class="nav-buttons">
+          <button type="button" class="back-btn">Back</button>
+          <button type="submit" class="submit-btn">Predict</button>
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <!-- ===== Prediction Result ===== -->
+  {% if prediction_text %}
+  <div class="result-block" id="result-block">
+    <h2>{{ prediction_text }}</h2>
+
+    <h3 class="tips-header">How to reduce your insurance costs:</h3>
+    <ul class="tips-list">
+      <li>Maintain a healthy BMI</li>
+      <li>Avoid smoking</li>
+      <li>Consider higher deductible plans if appropriate</li>
+      <li>Review your coverage annually</li>
+    </ul>
+
+    <button id="try-again">Try Again</button>
+  </div>
+  {% endif %}
+
+  <!-- ===== BMI Modal ===== -->
+  <div id="bmi-popup" class="modal">
+    <div class="modal-content">
+      <span class="close" id="close-bmi">&times;</span>
+      <h3>BMI Calculator</h3>
+      <label>Weight (lbs)</label>
+      <input type="number" id="weight" placeholder="e.g. 150" min="1" />
+      <label>Height</label>
+      <div class="height-inputs">
+        <input type="number" id="feet" placeholder="Feet" min="0" />
+        <input type="number" id="inches" placeholder="Inches" min="0" max="11" />
+      </div>
+      <button type="button" id="calculate-bmi">Calculate</button>
+      <p id="bmi-result"></p>
+    </div>
+  </div>
+
+  <!-- ===== Footer ===== -->
+  <footer>
+    <p>Built by <strong>The D.A.G.P. Initiative</strong></p>
+  </footer>
+
+  <!-- ===== Scripts ===== -->
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
