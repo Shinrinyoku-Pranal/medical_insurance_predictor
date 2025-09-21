@@ -1,8 +1,7 @@
 # Medical Insurance Predictor
 
-A simple **Flask** web application to estimate medical insurance costs based on user inputs. Built as part of **The D.A.G.P. Initiative**.
+A Flask web application to estimate medical insurance costs based on user inputs. Built as part of **SteelHacks 2025**.
 
----
 
 ## Features
 
@@ -15,19 +14,9 @@ A simple **Flask** web application to estimate medical insurance costs based on 
   - Region
 - Predicts estimated insurance costs using a pre-trained machine learning model (`model.pkl`).
 - Provides tips on how to reduce insurance costs.
-- Clean, responsive UI using HTML, CSS, and JS.
+- UI using HTML, CSS, and JS.
+- Interactive slider for live changes
 
----
+**Built by The D.A.G.P. Initiative**
 
-## Demo
 
-> Replace this with a link to your hosted app once deployed.
-
----
-
-## Installation
-
-1. Clone the repository:
-```bash
-git clone git@github.com:Shinrinyoku-Pranal/medical_insurance_predictor.git
-cd medical_insurance_predictor
