@@ -226,7 +226,7 @@ button:hover:not(:disabled) {
 
 /* ===== Result Block Tweaks ===== */
 .result-block h2 {
-  font-size: 34px;
+  font-size: 20px;
   margin-bottom: 25px;
   color: #e67e22;
 }
@@ -249,8 +249,23 @@ button:hover:not(:disabled) {
 
 
 .result-block p {
-  font-size: 20px;
+  font-size: 18px;
   margin: 8px 0;
+}
+
+/* Prominent result number */
+.result-number .highlight {
+  font-size: 56px;
+  font-weight: 800;
+  color: #c0392b;
+}
+
+/* Enlarge interactive what-if panel */
+.chart-card, .whatif-detailed, .chart-card > div {
+  width: 90%;
+  max-width: 900px;
+  margin: 18px auto;
+  padding: 22px;
 }
 
 .result-block small {

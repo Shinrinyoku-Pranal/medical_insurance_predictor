@@ -6,42 +6,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Chart.js removed (we no longer use charts) -->
   <!-- CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .chart-card { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); }
+    .highlight { color: #d35400; font-weight:700; }
+    canvas { width:100% !important; height: 300px !important; }
+  </style>
 </head>
 
 <body>
-  <!-- ===== Header / Hero ===== -->
+  <!-- Header -->
   <header class="hero">
     <div class="hero-content">
-      <h1>Insurance Charges Predictor</h1>
-      <p class="intro-text">Answer a few quick questions to estimate your medical insurance costs.</p>
+  <h1>Insurance Charges Predictor</h1>
+  {% if not prediction %}
+  <p class="intro-text">Answer a few quick questions to estimate your medical insurance costs — and see actionable changes.</p>
+  {% endif %}
     </div>
   </header>
 
-  <!-- ===== Quiz Container ===== -->
+  <!-- Quiz container -->
   <main class="quiz-container" id="quiz-container">
-    <div class="progress">
-      Question <span id="current-question">1</span>/6
-    </div>
-
-    <form id="quizForm" action="{{ url_for('predict') }}" method="post">
+    {% if not prediction %}
+    <div class="progress">Question <span id="current-question">1</span>/6</div>
+    {% endif %}
+    {% if not prediction %}
+    <form id="quizForm" action="{{ url_for('predict_form') }}" method="post">
       <!-- Age -->
       <div class="question-block active" data-question="1">
         <label>What is your age?</label>
-        <input type="number" name="age" placeholder="Age" min="1" max="120" required />
-        <div class="nav-buttons">
-          <button type="button" class="next-btn">Next</button>
-        </div>
+        <input type="number" name="age" id="age" placeholder="Age" min="1" max="120" required />
+        <div class="nav-buttons"><button type="button" class="next-btn">Next</button></div>
       </div>
 
       <!-- BMI -->
       <div class="question-block" data-question="2">
         <label>What is your BMI?</label>
-        <input type="number" name="bmi" placeholder="BMI" step="0.1" min="10" max="60" required />
-        <p class="helper-text">
-          Don’t know your BMI? <a href="#" id="open-bmi-calculator">Calculate here</a>
-        </p>
+        <input type="number" name="bmi" id="bmi" placeholder="BMI" step="0.1" min="10" max="60" required />
+        <p class="helper-text">Don’t know your BMI? <a href="#" id="open-bmi-calculator">Calculate here</a></p>
         <div class="nav-buttons">
           <button type="button" class="back-btn">Back</button>
           <button type="button" class="next-btn">Next</button>
@@ -51,7 +55,7 @@
       <!-- Children -->
       <div class="question-block" data-question="3">
         <label>How many children do you have?</label>
-        <input type="number" name="children" placeholder="Number of children" min="0" max="20" required />
+        <input type="number" name="children" id="children" placeholder="Number of children" min="0" max="20" value="0" required />
         <div class="nav-buttons">
           <button type="button" class="back-btn">Back</button>
           <button type="button" class="next-btn">Next</button>
@@ -61,10 +65,10 @@
       <!-- Sex -->
       <div class="question-block" data-question="4">
         <label>What is your sex?</label>
-        <select name="sex" required>
+        <select name="sex" id="sex" required>
           <option value="">Select</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
+          <option value="male" {% if form_values and form_values.sex=='male' %}selected{% endif %}>Male</option>
+          <option value="female" {% if form_values and form_values.sex=='female' %}selected{% endif %}>Female</option>
         </select>
         <div class="nav-buttons">
           <button type="button" class="back-btn">Back</button>
@@ -75,10 +79,10 @@
       <!-- Smoker -->
       <div class="question-block" data-question="5">
         <label>Do you smoke?</label>
-        <select name="smoker" required>
+        <select name="smoker" id="smoker" required>
           <option value="">Select</option>
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
+          <option value="yes" {% if form_values and form_values.smoker=='yes' %}selected{% endif %}>Yes</option>
+          <option value="no" {% if form_values and form_values.smoker=='no' %}selected{% endif %}>No</option>
         </select>
         <div class="nav-buttons">
           <button type="button" class="back-btn">Back</button>
@@ -88,41 +92,43 @@
 
       <!-- Region -->
       <div class="question-block" data-question="6">
-        <label>Which region do you live in?</label>
-        <select name="region" required>
+        <label>Which region do you live in(US)?</label>
+        <select name="region" id="region" required>
           <option value="">Select</option>
-          <option value="northwest">Northwest</option>
-          <option value="northeast">Northeast</option>
-          <option value="southwest">Southwest</option>
-          <option value="southeast">Southeast</option>
+          <option value="northwest" {% if form_values and form_values.region=='northwest' %}selected{% endif %}>Northwest</option>
+          <option value="northeast" {% if form_values and form_values.region=='northeast' %}selected{% endif %}>Northeast</option>
+          <option value="southwest" {% if form_values and form_values.region=='southwest' %}selected{% endif %}>Southwest</option>
+          <option value="southeast" {% if form_values and form_values.region=='southeast' %}selected{% endif %}>Southeast</option>
         </select>
         <div class="nav-buttons">
           <button type="button" class="back-btn">Back</button>
           <button type="submit" class="submit-btn">Predict</button>
         </div>
       </div>
-    </form>
+  </form>
+  {% endif %}
   </main>
 
-  <!-- ===== Prediction Result ===== -->
-  {% if prediction_text %}
-  <div class="result-block" id="result-block">
-    <h2>{{ prediction_text }}</h2>
+  <!-- Server-rendered result -->
+  {% if prediction %}
+  <div class="result-block active" id="result-block">
+    <h2>Your Estimated Insurance Cost</h2>
+    <p class="result-number"><span class="highlight">${{ prediction }}</span></p>
 
-    <h3 class="tips-header">How to reduce your insurance costs:</h3>
-    <ul class="tips-list">
-      <li>Maintain a healthy BMI</li>
-      <li>Avoid smoking</li>
-      <li>Consider higher deductible plans if appropriate</li>
-      <li>Review your coverage annually</li>
-    </ul>
+  <!-- Detailed What-if removed; interactive What-If panel is added by JS -->
 
-    <button id="try-again">Try Again</button>
+    <button id="try-again" onclick="window.location='/'">Try Again</button>
   </div>
   {% endif %}
 
-  <!-- ===== BMI Modal ===== -->
-  <div id="bmi-popup" class="modal">
+  {% if error %}
+    <div style="color:red; text-align:center; margin-top:18px;">
+      <strong>Error:</strong> {{ error }}
+    </div>
+  {% endif %}
+
+  <!-- BMI modal -->
+  <div id="bmi-popup" class="modal" aria-hidden="true">
     <div class="modal-content">
       <span class="close" id="close-bmi">&times;</span>
       <h3>BMI Calculator</h3>
@@ -138,12 +144,164 @@
     </div>
   </div>
 
-  <!-- ===== Footer ===== -->
-  <footer>
-    <p>Built by <strong>The D.A.G.P. Initiative</strong></p>
-  </footer>
+  <footer><p>Built by <strong>The D.A.G.P. Initiative</strong></p></footer>
+  <script id="server-data" type="application/json">
+    {{ {'form_values': form_values|default({}), 'prediction': prediction|default(None), 'contributions': contributions|default({})}|tojson }}
+  </script>
 
-  <!-- ===== Scripts ===== -->
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <!-- Inline script -->
+  <script>
+  (function(){
+  // Read server variables from a JSON script block to avoid editor/parser issues
+  const _serverEl = document.getElementById('server-data');
+  let _serverRaw = '{}';
+  if (_serverEl) _serverRaw = _serverEl.textContent || _serverEl.innerText || '{}';
+  let _SERVER = {};
+  try { _SERVER = JSON.parse(_serverRaw); } catch(e) { _SERVER = {}; }
+  const { form_values: FORM_VALUES = {}, prediction: INIT_PREDICTION = null, contributions: INIT_CONTRIBUTIONS = {} } = _SERVER || {};
+
+    // Multi-step quiz logic
+    const blocks = Array.from(document.querySelectorAll('.question-block'));
+    let current = 0;
+    const currentQ = document.getElementById('current-question');
+
+    function showQuestion(i) {
+      blocks.forEach(b => b.classList.remove('active'));
+      const b = blocks[i];
+      if (!b) return;
+      b.classList.add('active');
+      current = i;
+      currentQ.textContent = (i+1).toString();
+    }
+
+    document.querySelectorAll('.next-btn').forEach(btn => {
+      btn.addEventListener('click', () => { if (current < blocks.length - 1) showQuestion(current + 1); });
+    });
+    document.querySelectorAll('.back-btn').forEach(btn => {
+      btn.addEventListener('click', () => { if (current > 0) showQuestion(current - 1); });
+    });
+
+    // BMI modal
+    const bmiPopup = document.getElementById('bmi-popup');
+    const openBmi = document.getElementById('open-bmi-calculator');
+    if (openBmi) openBmi.addEventListener('click', (e) => { e.preventDefault(); bmiPopup.classList.add('open'); });
+    const closeBmi = document.getElementById('close-bmi');
+    if (closeBmi) closeBmi.addEventListener('click', () => bmiPopup.classList.remove('open'));
+    const calcBmiBtn = document.getElementById('calculate-bmi');
+    if (calcBmiBtn) calcBmiBtn.addEventListener('click', () => {
+      const wt = parseFloat(document.getElementById('weight').value) || 0;
+      const ft = parseFloat(document.getElementById('feet').value) || 0;
+      const inch = parseFloat(document.getElementById('inches').value) || 0;
+      const totalIn = ft*12 + inch;
+      if (wt <= 0 || totalIn <= 0) {
+        document.getElementById('bmi-result').textContent = 'Please enter valid height and weight.';
+        return;
+      }
+      const bmi = (wt / (totalIn * totalIn)) * 703;
+      document.getElementById('bmi-result').textContent = 'Your BMI: ' + bmi.toFixed(1);
+      document.getElementById('bmi').value = bmi.toFixed(1);
+      bmiPopup.classList.remove('open');
+    });
+
+  // Chart removed; we now display scenario deltas directly.
+
+    // AJAX predict helper
+    async function fetchPrediction(payload) {
+      try {
+        const resp = await fetch("/api/predict", {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify(payload)
+        });
+        const json = await resp.json();
+        return json;
+      } catch (err) { console.error(err); return { error: err.toString() }; }
+    }
+
+  // No chart rendering: INIT_CONTRIBUTIONS can be used for textual display if desired.
+
+    // If server-rendered prediction exists, add interactive controls
+    if (INIT_PREDICTION !== null) {
+      (function(){
+        const parent = document.querySelector('#result-block');
+        if (!parent) return;
+
+        const liveBmiStart = (FORM_VALUES && FORM_VALUES.bmi) ? FORM_VALUES.bmi : 25;
+        const liveSmokerStart = (FORM_VALUES && FORM_VALUES.smoker) ? FORM_VALUES.smoker : 'no';
+        const liveAgeStart = (FORM_VALUES && FORM_VALUES.age) ? FORM_VALUES.age : 40;
+        const liveChildrenStart = (FORM_VALUES && FORM_VALUES.children) ? FORM_VALUES.children : 0;
+        const liveSexStart = (FORM_VALUES && FORM_VALUES.sex) ? FORM_VALUES.sex : 'female';
+        const liveRegionStart = (FORM_VALUES && FORM_VALUES.region) ? FORM_VALUES.region : 'northeast';
+
+        const livePanel = document.createElement('div');
+        livePanel.className = 'chart-card';
+        livePanel.style.marginTop = '18px';
+        livePanel.innerHTML = `
+          <h3>Interactive what-if</h3>
+          <label>Adjust BMI: <span id="live-bmi-val">${liveBmiStart}</span></label>
+          <input id="live-bmi" type="range" min="15" max="50" step="0.1" value="${liveBmiStart}">
+          <label style="display:block; margin-top:8px;">Smoker status:
+            <select id="live-smoker">
+              <option value="no"${liveSmokerStart === 'no' ? ' selected' : ''}>No</option>
+              <option value="yes"${liveSmokerStart === 'yes' ? ' selected' : ''}>Yes</option>
+            </select>
+          </label>
+          <p>Live estimate: <strong id="live-pred">${INIT_PREDICTION !== null ? ('$' + INIT_PREDICTION) : '$0.00'}</strong></p>
+        `;
+        parent.appendChild(livePanel);
+
+        const liveBmi = document.getElementById('live-bmi');
+        const liveBmiVal = document.getElementById('live-bmi-val');
+        const liveSmoker = document.getElementById('live-smoker');
+        const livePred = document.getElementById('live-pred');
+
+        async function updateLive() {
+          // Build payload using visible controls and fallback to server-provided starts
+          const ageVal = (document.getElementById('age') ? parseFloat(document.getElementById('age').value) : liveAgeStart) || liveAgeStart;
+          const childrenVal = (document.getElementById('children') ? parseFloat(document.getElementById('children').value) : liveChildrenStart) || liveChildrenStart;
+          const sexVal = (document.getElementById('sex') ? document.getElementById('sex').value : liveSexStart) || liveSexStart;
+          const regionVal = (document.getElementById('region') ? document.getElementById('region').value : liveRegionStart) || liveRegionStart;
+          const payload = {
+            age: ageVal,
+            bmi: parseFloat(liveBmi.value),
+            children: childrenVal,
+            sex: sexVal,
+            smoker: liveSmoker.value || liveSmokerStart,
+            region: regionVal
+          };
+          liveBmiVal.textContent = payload.bmi;
+          const json = await fetchPrediction(payload);
+          if (!json || json.error) {
+            console.error('Live prediction error', json && json.error);
+            return;
+          }
+          const predNum = Number(json.prediction);
+          livePred.textContent = '$' + predNum.toFixed(2);
+          // compute scenario estimates from API response
+          const ns = Number(json.non_smoker_pred || predNum);
+          const lb = Number(json.lower_bmi_pred || predNum);
+          const nsDelta = ns - predNum;
+          const lbDelta = lb - predNum;
+          const nsPerc = predNum !== 0 ? (nsDelta / predNum) * 100 : 0;
+          const lbPerc = predNum !== 0 ? (lbDelta / predNum) * 100 : 0;
+          // Update panel-local elements
+          const elNs = document.getElementById('live-nonsmoker');
+          const elLb = document.getElementById('live-lowerbmi');
+          const elNsD = document.getElementById('live-nonsmoker-delta');
+          const elLbD = document.getElementById('live-lowerbmi-delta');
+          if (elNs) elNs.textContent = '$' + ns.toFixed(2);
+          if (elLb) elLb.textContent = '$' + lb.toFixed(2);
+          if (elNsD) elNsD.textContent = ` (${nsDelta >= 0 ? '+' : ''}${nsDelta.toFixed(2)}; ${nsPerc >= 0 ? '+' : ''}${nsPerc.toFixed(1)}%)`;
+          if (elLbD) elLbD.textContent = ` (${lbDelta >= 0 ? '+' : ''}${lbDelta.toFixed(2)}; ${lbPerc >= 0 ? '+' : ''}${lbPerc.toFixed(1)}%)`;
+        }
+
+        liveBmi.addEventListener('input', updateLive);
+        liveSmoker.addEventListener('change', updateLive);
+        // initial update
+        updateLive();
+      })();
+    }
+})();
+  </script>
 </body>
 </html>
