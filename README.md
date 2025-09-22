@@ -17,6 +17,6 @@ A Flask web application to estimate medical insurance costs based on user inputs
 - UI using HTML, CSS, and JS.
 - Interactive slider for live changes
 
-**Built by The D.A.G.P. Initiative**
+**Built by Pranal Siripurapu for the SteelHacks Hacakthon**
 
 
